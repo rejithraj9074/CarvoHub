@@ -14,7 +14,7 @@ import {
   useMediaQuery,
   Container,
 } from '@mui/material';
-import { Menu as MenuIcon, DirectionsCar as CarIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, DirectionsCar as CarIcon, AccountCircle as AccountIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Navbar.css';
 
@@ -76,13 +76,7 @@ const Navbar = () => {
   };
 
   const navItems = isLoggedIn
-    ? [
-        { text: 'Home', path: '/' },
-        { text: 'Dashboard', path: '/customer' },
-        { text: 'Services', action: handleServicesClick, isAction: true },
-        { text: 'Profile', path: '/profile' },
-        { text: 'Logout', action: handleLogout, isAction: true },
-      ]
+    ? []
     : [
         { text: 'Home', path: '/' },
         { text: 'Services', action: handleServicesClick, isAction: true },
@@ -91,41 +85,64 @@ const Navbar = () => {
       ];
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', height: '100%', background: 'linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)' }}>
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', height: '100%', background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)' }}>
       <Typography variant="h6" sx={{ my: 3, color: 'white', fontWeight: 700 }}>
         <CarIcon sx={{ mr: 1, verticalAlign: 'middle', fontSize: '1.5rem' }} />
         CarvoHub
       </Typography>
       <List>
-        {navItems.map((item) => (
-          <ListItem 
-            key={item.text} 
-            onClick={item.isAction ? item.action : () => handleNavigation(item.path)}
-            sx={{
-              mx: 2,
-              borderRadius: 2,
-              mb: 1,
-              backgroundColor: isActive(item.path) ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                transform: 'translateX(8px)',
-              },
-            }}
-          >
-            <ListItemText 
-              primary={item.text} 
-              sx={{ 
-                textAlign: 'center',
-                color: 'white',
-                fontWeight: 600,
-                '& .MuiTypography-root': {
-                  fontWeight: isActive(item.path) ? 700 : 600,
+        {isLoggedIn ? (
+          <>
+            <ListItem sx={{ justifyContent: 'center' }}>
+              <Button
+                onClick={() => handleNavigation('/profile')}
+                startIcon={<AccountIcon />}
+                sx={{ color: 'white', fontWeight: 700 }}
+              >
+                Profile
+              </Button>
+            </ListItem>
+            <ListItem sx={{ justifyContent: 'center' }}>
+              <Button
+                onClick={handleLogout}
+                startIcon={<LogoutIcon />}
+                sx={{ color: 'white', fontWeight: 700 }}
+              >
+                Logout
+              </Button>
+            </ListItem>
+          </>
+        ) : (
+          navItems.map((item) => (
+            <ListItem 
+              key={item.text} 
+              onClick={item.isAction ? item.action : () => handleNavigation(item.path)}
+              sx={{
+                mx: 2,
+                borderRadius: 2,
+                mb: 1,
+                backgroundColor: isActive(item.path) ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                  transform: 'translateX(8px)',
                 },
               }}
-            />
-          </ListItem>
-        ))}
+            >
+              <ListItemText 
+                primary={item.text} 
+                sx={{ 
+                  textAlign: 'center',
+                  color: 'white',
+                  fontWeight: 600,
+                  '& .MuiTypography-root': {
+                    fontWeight: isActive(item.path) ? 700 : 600,
+                  },
+                }}
+              />
+            </ListItem>
+          ))
+        )}
       </List>
     </Box>
   );
@@ -135,7 +152,7 @@ const Navbar = () => {
       <AppBar 
         position="sticky" 
         sx={{ 
-          background: 'linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)',
+          background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)',
           backdropFilter: 'blur(10px)',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
           top: 0,
@@ -189,32 +206,69 @@ const Navbar = () => {
               </IconButton>
             ) : (
               <Box sx={{ display: 'flex', gap: 1 }}>
-                {navItems.map((item) => (
-                  <Button
-                    key={item.text}
-                    color="inherit"
-                    onClick={item.isAction ? item.action : () => handleNavigation(item.path)}
-                    sx={{
-                      backgroundColor: isActive(item.path) ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: 3,
-                      px: 3,
-                      py: 1,
-                      fontWeight: 600,
-                      fontSize: '0.9rem',
-                      textTransform: 'none',
-                      border: isActive(item.path) ? '2px solid rgba(255, 255, 255, 0.3)' : '2px solid transparent',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
-                      },
-                    }}
-                  >
-                    {item.text}
-                  </Button>
-                ))}
+                {isLoggedIn ? (
+                  <>
+                    <Button
+                      color="inherit"
+                      onClick={() => handleNavigation('/profile')}
+                      startIcon={<AccountIcon />}
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: 3,
+                        px: 2,
+                        py: 1,
+                        fontWeight: 600,
+                        textTransform: 'none',
+                      }}
+                    >
+                      Profile
+                    </Button>
+                    <Button
+                      color="inherit"
+                      onClick={handleLogout}
+                      startIcon={<LogoutIcon />}
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: 3,
+                        px: 2,
+                        py: 1,
+                        fontWeight: 600,
+                        textTransform: 'none',
+                      }}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  navItems.map((item) => (
+                    <Button
+                      key={item.text}
+                      color="inherit"
+                      onClick={item.isAction ? item.action : () => handleNavigation(item.path)}
+                      sx={{
+                        backgroundColor: isActive(item.path) ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: 3,
+                        px: 3,
+                        py: 1,
+                        fontWeight: 600,
+                        fontSize: '0.9rem',
+                        textTransform: 'none',
+                        border: isActive(item.path) ? '2px solid rgba(255, 255, 255, 0.3)' : '2px solid transparent',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
+                        },
+                      }}
+                    >
+                      {item.text}
+                    </Button>
+                  ))
+                )}
               </Box>
             )}
           </Toolbar>
@@ -233,7 +287,7 @@ const Navbar = () => {
           '& .MuiDrawer-paper': { 
             boxSizing: 'border-box', 
             width: 280,
-            background: 'linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)',
+            background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)',
           },
         }}
       >

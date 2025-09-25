@@ -1,30 +1,34 @@
+// config/db.js
 import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    const uri = process.env.MONGO_URI;
-    if (!uri) {
-      throw new Error("MONGO_URI is not set. Create a .env with MONGO_URI.");
-    }
+    // Use Atlas URI from .env, otherwise fallback to local MongoDB
+    const uri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/smartcarservice";
 
-    // Optional: surface mongoose debug when needed
-    if (process.env.MONGOOSE_DEBUG === 'true') {
-      mongoose.set('debug', true);
+    console.log("Environment variables loaded:");
+    console.log("- MONGO_URI:", process.env.MONGO_URI ? "✅ Found" : "❌ Not found");
+    console.log("- JWT_SECRET:", process.env.JWT_SECRET ? "✅ Found" : "❌ Not found");
+    console.log("- PORT:", process.env.PORT || "Not set");
+    console.log("Using URI:", uri.includes("mongodb+srv") ? "🌐 Atlas (Cloud)" : "🏠 Local");
+    console.log("Attempting to connect to MongoDB...");
+
+    // Enable mongoose debug mode if needed
+    if (process.env.MONGOOSE_DEBUG === "true") {
+      mongoose.set("debug", true);
     }
 
     const conn = await mongoose.connect(uri, {
-      // These help with slow Atlas selection and modern drivers
-      serverSelectionTimeoutMS: 45000,
-      socketTimeoutMS: 60000,
-      // The following are defaults in modern mongoose but kept explicit
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000, // fail fast if Mongo is unreachable
+      socketTimeoutMS: 30000, // avoid long hanging sockets
     });
+
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error("❌ MongoDB connection error:", error?.message || error);
-    console.error("Hints: \n- Verify MONGO_URI (use mongodb+srv for Atlas).\n- Add your IP to Atlas Network Access.\n- Ensure firewall allows TLS to *.mongodb.net:27017.\n- Check DNS resolution of your cluster hosts.\n- Try increasing serverSelectionTimeoutMS.");
-    process.exit(1);
+    console.error("⚠️  Continuing without database connection for testing purposes...");
+    console.error("To fix: Install MongoDB locally or set MONGO_URI in .env file");
+    // Don't exit the process, allow the server to start for testing
   }
 };
 

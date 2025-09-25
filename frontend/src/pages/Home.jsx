@@ -32,7 +32,7 @@ const Home = () => {
       description: 'Book certified mechanics for your vehicle maintenance and repairs. Get instant quotes and schedule appointments.',
       icon: BuildIcon,
       action: 'Book Now',
-      path: '/login',
+      path: '/services/mechanic',
       image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
     },
     {
@@ -40,7 +40,7 @@ const Home = () => {
       description: 'Professional car washing services with flexible scheduling. Keep your vehicle looking its best.',
       icon: CarWashIcon,
       action: 'Book Wash',
-      path: '/login',
+      path: '/services/carwash',
       image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
     },
     {
@@ -62,7 +62,12 @@ const Home = () => {
   ];
 
   const handleServiceAction = (service) => {
-    navigate(service.path);
+    const isLoggedIn = (() => { try { return Boolean(localStorage.getItem('token')); } catch { return false; } })();
+    if (isLoggedIn) {
+      navigate(service.path);
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
