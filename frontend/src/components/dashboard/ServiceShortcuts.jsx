@@ -9,7 +9,7 @@ const MotionCard = motion(Card);
 const shortcuts = [
   { title: 'Book Mechanic', icon: Build, path: '/services/mechanic', color: '#dc2626' },
   { title: 'Book Car Wash', icon: LocalCarWash, path: '/services/car-wash', color: '#7c2d12' },
-  { title: 'Buy Spare Parts', icon: ShoppingCart, path: '/store/spares', color: '#ef4444' },
+  { title: 'Accessory Shopping', icon: ShoppingCart, path: '/accessories', color: '#ef4444' },
   { title: 'Browse Second-Hand Cars', icon: DirectionsCar, path: '/marketplace/cars', color: '#b91c1c' },
 ];
 

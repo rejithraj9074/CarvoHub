@@ -76,7 +76,12 @@ const Navbar = () => {
   };
 
   const navItems = isLoggedIn
-    ? []
+    ? [
+        { text: 'Home', path: '/' },
+        { text: 'Services', action: handleServicesClick, isAction: true },
+        { text: 'My Orders', path: '/my-orders' },
+        { text: 'Profile', path: '/profile' },
+      ]
     : [
         { text: 'Home', path: '/' },
         { text: 'Services', action: handleServicesClick, isAction: true },
@@ -91,57 +96,54 @@ const Navbar = () => {
         CarvoHub
       </Typography>
       <List>
-        {isLoggedIn ? (
-          <>
-            <ListItem sx={{ justifyContent: 'center' }}>
-              <Button
-                onClick={() => handleNavigation('/profile')}
-                startIcon={<AccountIcon />}
-                sx={{ color: 'white', fontWeight: 700 }}
-              >
-                Profile
-              </Button>
-            </ListItem>
-            <ListItem sx={{ justifyContent: 'center' }}>
-              <Button
-                onClick={handleLogout}
-                startIcon={<LogoutIcon />}
-                sx={{ color: 'white', fontWeight: 700 }}
-              >
-                Logout
-              </Button>
-            </ListItem>
-          </>
-        ) : (
-          navItems.map((item) => (
-            <ListItem 
-              key={item.text} 
-              onClick={item.isAction ? item.action : () => handleNavigation(item.path)}
-              sx={{
-                mx: 2,
-                borderRadius: 2,
-                mb: 1,
-                backgroundColor: isActive(item.path) ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                  transform: 'translateX(8px)',
+        {navItems.map((item) => (
+          <ListItem 
+            key={item.text} 
+            onClick={item.isAction ? item.action : () => handleNavigation(item.path)}
+            sx={{
+              mx: 2,
+              borderRadius: 2,
+              mb: 1,
+              backgroundColor: isActive(item.path) ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                transform: 'translateX(8px)',
+              },
+            }}
+          >
+            <ListItemText 
+              primary={item.text} 
+              sx={{ 
+                textAlign: 'center',
+                color: 'white',
+                fontWeight: 600,
+                '& .MuiTypography-root': {
+                  fontWeight: isActive(item.path) ? 700 : 600,
                 },
               }}
+            />
+          </ListItem>
+        ))}
+        {isLoggedIn && (
+          <ListItem sx={{ justifyContent: 'center', mt: 2 }}>
+            <Button
+              onClick={handleLogout}
+              startIcon={<LogoutIcon />}
+              sx={{ 
+                color: 'white', 
+                fontWeight: 700,
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: 2,
+                px: 2,
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                }
+              }}
             >
-              <ListItemText 
-                primary={item.text} 
-                sx={{ 
-                  textAlign: 'center',
-                  color: 'white',
-                  fontWeight: 600,
-                  '& .MuiTypography-root': {
-                    fontWeight: isActive(item.path) ? 700 : 600,
-                  },
-                }}
-              />
-            </ListItem>
-          ))
+              Logout
+            </Button>
+          </ListItem>
         )}
       </List>
     </Box>
@@ -206,68 +208,53 @@ const Navbar = () => {
               </IconButton>
             ) : (
               <Box sx={{ display: 'flex', gap: 1 }}>
-                {isLoggedIn ? (
-                  <>
-                    <Button
-                      color="inherit"
-                      onClick={() => handleNavigation('/profile')}
-                      startIcon={<AccountIcon />}
-                      sx={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(10px)',
-                        borderRadius: 3,
-                        px: 2,
-                        py: 1,
-                        fontWeight: 600,
-                        textTransform: 'none',
-                      }}
-                    >
-                      Profile
-                    </Button>
-                    <Button
-                      color="inherit"
-                      onClick={handleLogout}
-                      startIcon={<LogoutIcon />}
-                      sx={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(10px)',
-                        borderRadius: 3,
-                        px: 2,
-                        py: 1,
-                        fontWeight: 600,
-                        textTransform: 'none',
-                      }}
-                    >
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  navItems.map((item) => (
-                    <Button
-                      key={item.text}
-                      color="inherit"
-                      onClick={item.isAction ? item.action : () => handleNavigation(item.path)}
-                      sx={{
-                        backgroundColor: isActive(item.path) ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(10px)',
-                        borderRadius: 3,
-                        px: 3,
-                        py: 1,
-                        fontWeight: 600,
-                        fontSize: '0.9rem',
-                        textTransform: 'none',
-                        border: isActive(item.path) ? '2px solid rgba(255, 255, 255, 0.3)' : '2px solid transparent',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        '&:hover': {
-                          backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
-                        },
-                      }}
-                    >
-                      {item.text}
-                    </Button>
-                  ))
+                {navItems.map((item) => (
+                  <Button
+                    key={item.text}
+                    color="inherit"
+                    onClick={item.isAction ? item.action : () => handleNavigation(item.path)}
+                    sx={{
+                      backgroundColor: isActive(item.path) ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)',
+                      borderRadius: 3,
+                      px: 3,
+                      py: 1,
+                      fontWeight: 600,
+                      fontSize: '0.9rem',
+                      textTransform: 'none',
+                      border: isActive(item.path) ? '2px solid rgba(255, 255, 255, 0.3)' : '2px solid transparent',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
+                      },
+                    }}
+                  >
+                    {item.text}
+                  </Button>
+                ))}
+                {isLoggedIn && (
+                  <Button
+                    color="inherit"
+                    onClick={handleLogout}
+                    startIcon={<LogoutIcon />}
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)',
+                      borderRadius: 3,
+                      px: 2,
+                      py: 1,
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        transform: 'translateY(-2px)',
+                      },
+                    }}
+                  >
+                    Logout
+                  </Button>
                 )}
               </Box>
             )}

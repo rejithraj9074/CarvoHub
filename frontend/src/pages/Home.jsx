@@ -26,44 +26,70 @@ const Home = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
 
-  const services = [
-    {
-      title: 'Mechanic Booking',
-      description: 'Book certified mechanics for your vehicle maintenance and repairs. Get instant quotes and schedule appointments.',
-      icon: BuildIcon,
-      action: 'Book Now',
-      path: '/services/mechanic',
-      image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    },
-    {
-      title: 'Car Wash Booking',
-      description: 'Professional car washing services with flexible scheduling. Keep your vehicle looking its best.',
-      icon: CarWashIcon,
-      action: 'Book Wash',
-      path: '/services/carwash',
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    },
-    {
-      title: 'Second-Hand Car Sales',
-      description: 'Browse quality used vehicles or list your car for sale. Verified listings with detailed information.',
-      icon: CarIcon,
-      action: 'Browse Cars',
-      path: '/login',
-      image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    },
-    {
-      title: 'Spare Parts Purchase',
-      description: 'Genuine spare parts for all major brands. Fast delivery and competitive pricing guaranteed.',
-      icon: PartsIcon,
-      action: 'Shop Parts',
-      path: '/login',
-      image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    },
-  ];
+  const getServices = () => {
+    const isLoggedIn = (() => { try { return Boolean(localStorage.getItem('token')); } catch { return false; } })();
+    
+    const baseServices = [
+      {
+        title: 'Mechanic Booking',
+        description: 'Book certified mechanics for your vehicle maintenance and repairs. Get instant quotes and schedule appointments.',
+        icon: BuildIcon,
+        action: 'Book Now',
+        path: '/services/mechanic',
+        image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+      },
+      {
+        title: 'Car Accessories Sales',
+        description: 'Buy seat covers, mats, and more accessories for your car.',
+        icon: PartsIcon,
+        action: 'Shop Accessories',
+        path: '/accessories',
+        image: 'https://images.unsplash.com/photo-1542367597-8849eb60078a?q=80&w=1200&auto=format&fit=crop',
+      },
+      {
+        title: 'Car Wash Booking',
+        description: 'Professional car washing services with flexible scheduling. Keep your vehicle looking its best.',
+        icon: CarWashIcon,
+        action: 'Book Wash',
+        path: '/services/carwash',
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+      },
+    ];
+
+    if (isLoggedIn) {
+      // For logged-in users, add Accessory Shopping instead of Second-Hand Car Sales
+      baseServices.push({
+        title: 'Accessory Shopping',
+        description: 'Browse and purchase car accessories, spare parts, and automotive products with exclusive member benefits.',
+        icon: PartsIcon,
+        action: 'Shop Now',
+        path: '/accessories',
+        image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+      });
+    } else {
+      // For non-logged-in users, show Second-Hand Car Sales
+      baseServices.push({
+        title: 'Second-Hand Car Sales',
+        description: 'Browse quality used vehicles or list your car for sale. Verified listings with detailed information.',
+        icon: CarIcon,
+        action: 'Browse Cars',
+        path: '/login',
+        image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+      });
+    }
+
+    return baseServices;
+  };
+
+  const services = getServices();
 
   const handleServiceAction = (service) => {
     const isLoggedIn = (() => { try { return Boolean(localStorage.getItem('token')); } catch { return false; } })();
-    if (isLoggedIn) {
+    
+    // Allow access to accessories page without login
+    if (service.path === '/accessories') {
+      navigate(service.path);
+    } else if (isLoggedIn) {
       navigate(service.path);
     } else {
       navigate('/login');

@@ -5,6 +5,11 @@ import { CustomThemeProvider } from './contexts/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import AccessoriesPage from './pages/AccessoriesPage';
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import MyOrders from './pages/MyOrders';
+import { CartProvider } from './contexts/CartContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import CustomerDashboard from './pages/CustomerDashboard';
@@ -35,6 +40,10 @@ function App() {
           <Box component="main" sx={{ flex: 1 }}>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/accessories" element={<AccessoriesPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/my-orders" element={<MyOrders />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/customer" element={<CustomerDashboard />} />
@@ -58,10 +67,12 @@ function App() {
   };
   return (
     <CustomThemeProvider>
-      <CssBaseline />
-      <Router>
-        <AdminAwareLayout />
-      </Router>
+      <CartProvider>
+        <CssBaseline />
+        <Router>
+          <AdminAwareLayout />
+        </Router>
+      </CartProvider>
     </CustomThemeProvider>
   );
 }

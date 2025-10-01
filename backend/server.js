@@ -13,6 +13,7 @@ import adminAuthRoutes from "./routes/adminAuthRoutes.js";
 import adminMechanicRoutes from "./routes/adminMechanicRoutes.js";
 import accessoryRoutes from "./routes/accessoryRoutes.js";
 import accessoryOrderRoutes from "./routes/accessoryOrderRoutes.js";
+import storefrontRoutes from "./routes/storefrontRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -46,6 +47,7 @@ app.use("/api/admin", adminAuthRoutes);
 app.use("/api/admin/mechanics", adminMechanicRoutes);
 app.use("/api/admin/accessories", accessoryRoutes);
 app.use("/api/admin/accessory-orders", accessoryOrderRoutes);
+app.use("/api", storefrontRoutes);
 
 // Health check / default route
 app.get("/", (req, res) => {
